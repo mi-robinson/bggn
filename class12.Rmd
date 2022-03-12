@@ -1,0 +1,52 @@
+---
+title: "Population Scale Analysis"
+author: "Meg Robinson"
+date: "2/19/2022"
+output: word_document
+---
+ 
+ ## Section 4: Population Scale Analysis
+ 
+ > Q13: Read this file into R and determine the sample size for each genotype and their corresponding median expression levels for each of these genotypes. 
+ 
+```{r}
+expr <- read.table("exp.txt")
+head(expr)
+```
+ 
+```{r}
+nrow(expr)
+```
+There are 462 individuals we have this data for. But how many for each genotype? 
+
+```{r}
+table(expr$geno)
+```
+```{r}
+summary(expr)
+```
+ 
+ This 'summary()' function gives us the overall median expression levels, but we want to see it per genotype. 
+ 
+```{r}
+summary(expr$exp[expr$geno == "A/A"])
+summary(expr$exp[expr$geno == "G/G"])
+summary(expr$exp[expr$geno == "A/G"])
+```
+ 
+ > ANSWER: Genotype A/A has a median expression level of 31.25. Genotype G/G has a median expression level of 20.074. Genotype A/G has a median expression level of 25.065.
+
+Lets make a summary figure to display these results.
+
+> Q14: Generate a boxplot with a box per genotype, what could you infer from the relative expression value between A/A and G/G displayed in this plot? Does the SNP effect the expression of ORMDL3?
+ 
+```{r}
+library(ggplot2)
+```
+```{r}
+bplot <- ggplot(expr) + aes(x=geno, y=exp, fill=geno) + geom_boxplot(notch=TRUE) + xlab("Genotype") + ylab("Expression") 
+
+bplot 
+```
+ 
+ > ANSWER: Based on this box plot, I can infer that the relative expression of G/G is markedly lower than the expression of A/A. Yes, it seems that SNP influences ORMDL3 gene expression (known for asthma)
